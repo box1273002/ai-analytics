@@ -1,0 +1,65 @@
+version: 2
+
+seeds:
+  - name: bronze_card_transactions
+    description: Raw card processor files, stacked as received. Known to be messy.
+    columns:
+      - name: currency
+        description: Currency code as sent (case and spacing vary in the raw data).
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['GBP', 'EUR', 'USD', 'CHF']
+              config:
+                severity: warn        # expected to be dirty at this layer
+
+models:
+  - name: silver_transactions_latest
+    description: One row per transaction id, latest status, tidied.
+    columns:
+      - name: txn_id
+        data_tests: [unique, not_null]
+      - name: status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['PENDING', 'POSTED', 'REVERSED']
+      - name: currency
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['GBP', 'EUR', 'USD', 'CHF']
+
+  - name: silver_cards
+    description: One row per card, latest customer record.
+    columns:
+      - name: card_id
+        data_tests: [unique, not_null]
+
+  - name: silver_fx_daily
+    description: One row per day and currency, last known rate carried forward.
+    columns:
+      - name: rate_to_gbp
+        data_tests: [not_null]
+
+  - name: silver_transactions
+    description: Transactions with segment and GBP amount. Grain is one row per txn_id.
+    columns:
+      - name: txn_id
+        data_tests: [unique, not_null]
+      - name: card_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('silver_cards')
+                field: card_id
+              config:
+                severity: warn        # some cards are missing from the customer master
+      - name: amount_gbp
+        data_tests: [not_null]
+
+  - name: gold_spend_by_month_segment
+    description: Posted spend in GBP by month and segment. Feeds the dashboard.
+    columns:
+      - name: spend_gbp
+        data_tests: [not_null]

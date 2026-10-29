@@ -1,0 +1,24 @@
+name: card_spend
+version: "1.0"
+config-version: 2
+profile: card_spend
+
+vars:
+  calendar_end: "2026-03-31"     # last day we need an exchange rate for
+
+seeds:
+  card_spend:
+    bronze_card_transactions:
+      +column_types:
+        txn_timestamp: varchar    # two timestamp formats arrive mixed, so keep as text
+        ref_txn_id: varchar
+    bronze_customer_master:
+      +column_types:
+        snapshot_date: date
+
+models:
+  card_spend:
+    silver:
+      +materialized: table
+    gold:
+      +materialized: table
