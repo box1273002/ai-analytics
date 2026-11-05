@@ -1,0 +1,13 @@
+station_id,station_name,zone,capacity
+S01,Market Square,Centre,29.0
+S02,Railway Station,Centre,23.0
+S03,Canal Basin,North,24.0
+S04,University Gate,West,28.0
+S05,Park Road,South,22.0
+S06,Library Corner,Centre,26.0
+S07,Hospital Entrance,East,27.0
+S08,Riverside Walk,South,14.0
+S09,Old Town Hall,Centre,
+S10,Retail Park,North,16.0
+S11,Sports Centre,West,15.0
+S12,Cathedral Close,Centre,28.0

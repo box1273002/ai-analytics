@@ -1,0 +1,7 @@
+card_spend:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: card_spend.duckdb
+      threads: 1
